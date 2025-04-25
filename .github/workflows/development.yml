@@ -63,11 +63,7 @@ jobs:
       - name: Obtener versión de la imagen
         id: get-version
         run: |
-          if git describe --tags --exact-match &> /dev/null; then
-            VERSION=$(git describe --tags --abbrev=0)
-          else
-            VERSION=$(date +%Y%m%d%H%M%S)
-          fi
+          VERSION=$(git describe --tags --abbrev=0 2>/dev/null || date +%Y%m%d%H%M%S)
           echo "version=$VERSION" >> $GITHUB_OUTPUT
 
       # Paso 6: Construir y subir imagen con doble tag
