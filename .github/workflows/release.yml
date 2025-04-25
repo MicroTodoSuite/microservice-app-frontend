@@ -13,15 +13,27 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Install Node.js 8.17.0
-        uses: actions/setup-node@v4
-        with:
-          node-version: 8.17.0
+      - name: Instalar Node.js 8.17.0
+        run: |
+          curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
+          export NVM_DIR="$HOME/.nvm"
+          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+          nvm install 8.17.0
+          nvm use 8.17.0
 
-      - name: Install dependencies
+      - name: Instalar Python 2.7
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y python2.7
+          sudo ln -s /usr/bin/python2.7 /usr/bin/python2
+
+      - name: Configurar Python para node-gyp
+        run: npm config set python python2
+
+      - name: Instalar dependencias
         run: npm ci
 
-      - name: Run Semantic Release (v17)
+      - name: Ejecutar Semantic Release
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-        run: npx semantic-release@17
+        run: npx semantic-release
