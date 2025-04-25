@@ -27,6 +27,8 @@ env:
   RESOURCE_GROUP: ${{ secrets.AZURE_RESOURCE_GROUP_NAME }} # Grupo de recursos de Azure donde están desplegadas las Container Apps
   AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS_COLONIA }} # Credenciales de Azure configuradas en GitHub Secrets
   AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID_COLONIA }} # ID de la suscripción de Azure configuradas en GitHub Secrets
+  GITHUB_REPOSITORY: 'MicroTodoSuite/microservice-app-frontend' # Repositorio de frontend
+  GH_TOKEN: ${{ secrets.GH_TOKEN }} # Github token con los permisos necesarios
   SERVICE_NAME: "frontend" # Nombre del microservicio
 
 jobs:
@@ -67,7 +69,8 @@ jobs:
       - name: Obtener versión de la imagen
         id: get-version
         run: |
-          VERSION=$(git describe --tags --abbrev=0 2>/dev/null || date +%Y%m%d%H%M%S)
+          # Usa GitHub CLI para obtener el tag de la última release (falla silenciosamente si no hay releases)
+          VERSION=$(gh release view --repo $GITHUB_REPOSITORY --latest --json tagName --jq '.tagName' 2>/dev/null || date +%Y%m%d%H%M%S)
           echo "version=$VERSION" >> $GITHUB_OUTPUT
 
       # Paso 6: Construir y subir imagen con doble tag
