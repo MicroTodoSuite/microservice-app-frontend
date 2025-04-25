@@ -54,6 +54,11 @@ jobs:
           fi
           echo "✅ El grupo de recursos existe."
 
+      # Paso 4: Login al Azure Container Registry
+      - name: Login al Azure Container Registry (ACR)
+        run: |
+          az acr login --name ${ACR_NAME%%.*}
+
       # Paso 5: Obtener versión del último release o usar timestamp
       - name: Obtener versión de la imagen
         id: get-version
