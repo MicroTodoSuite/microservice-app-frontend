@@ -69,8 +69,8 @@ jobs:
       - name: Obtener versión de la imagen
         id: get-version
         run: |
-          # Usa GitHub CLI para obtener el tag de la última release (falla silenciosamente si no hay releases)
-          VERSION=$(gh release view --repo $GITHUB_REPOSITORY --latest --json tagName --jq '.tagName' 2>/dev/null || date +%Y%m%d%H%M%S)
+          # Usa GitHub CLI para obtener el tag de la última release
+          VERSION=$(gh release list --repo $GITHUB_REPOSITORY --limit 1 --json tagName --jq '.[0].tagName')
           echo "version=$VERSION" >> $GITHUB_OUTPUT
 
       # Paso 6: Construir y subir imagen con doble tag
