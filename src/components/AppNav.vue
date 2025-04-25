@@ -12,30 +12,30 @@
         <a class="btn btn-success mr-sm-2" href="#/login">Login</a>
       </li>
       <li class="nav-item" v-show="isLoggedIn()">
-        <button class="btn btn-danger mr-sm-2" href="#" @click="logout()">
-          Logout
-        </button>
+        <button class="btn btn-danger mr-sm-2" href="#" @click="logout()" >Logout</button>
       </li>
     </ul>
   </nav>
+
 </template>
 
 <script>
-import Auth from "@/auth";
+
+import Auth from '@/auth'
 
 export default {
-  name: "app-nav",
+  name: 'app-nav',
 
   methods: {
-    logout() {
-      Auth.logout();
+    logout () {
+      Auth.logout()
     },
-    isLoggedIn() {
-      return Auth.isLoggedIn();
+    isLoggedIn () {
+      return Auth.isLoggedIn()
     },
-    isAdmin() {
-      return Auth.isAdmin();
-    },
-  },
-};
+    isAdmin () {
+      return Auth.isAdmin()
+    }
+  }
+}
 </script>
