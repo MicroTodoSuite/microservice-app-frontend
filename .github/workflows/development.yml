@@ -1,7 +1,10 @@
 # ========================================================================
-# PIPELINE DE DESARROLLO AUTOMATIZADO PARA MICROSERVICIOS (OPTIMIZADO)
+# PIPELINE DE DESARROLLO AUTOMATIZADO PARA MICROSERVICIOS
 # ========================================================================
 
+# Este pipeline se ejecuta automáticamente al:
+# 1. Hacer push a la rama main
+# 2. Cuando el "Infrastructure Pipeline" finaliza exitosamente
 name: Development Pipeline
 
 on:
@@ -13,26 +16,27 @@ on:
       - main
   repository_dispatch:
     types: [infra-completed]
+
 # Variables reutilizables a lo largo del workflow
 env:
-  ACR_NAME: "msappacrestebangzam.azurecr.io"
-  RESOURCE_GROUP: "microservice-app-rg-estebangzam"
-  AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS_COLONIA }} # Credenciales de Azure configuradas en GitHub Secrets
-  AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID_COLONIA }} # ID de la suscripción de Azure configuradas en GitHub Secrets
-  SERVICE_NAME: "frontend"
+  ACR_NAME: "msappacrestebangzam.azurecr.io" # Nombre completo del Azure Container Registry (ACR)
+  RESOURCE_GROUP: "microservice-app-rg-estebangzam" # Grupo de recursos de Azure donde están desplegadas las Container Apps
+  AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS_GAVIRIA }} # Credenciales de Azure configuradas en GitHub Secrets
+  AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID_GAVIRIA }} # ID de la suscripción de Azure configuradas en GitHub Secrets
+  SERVICE_NAME: "frontend" # Nombre del microservicio
 
 jobs:
+  # ==============================================
+  # ETAPA PRINCIPAL: CONSTRUCCIÓN Y DESPLIEGUE
+  # ==============================================
   build_and_deploy:
     name: Build y Deploy
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest # Ejecutor base
 
     steps:
-      # Paso 1: Checkout con todos los tags
+      # Paso 1: Checkout del repositorio
       - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0 # Clona toda la historia de commits
-          fetch-tags: true # Descarga todos los tags
 
       # Paso 2: Autenticación con Azure
       - name: Azure Login
@@ -40,48 +44,36 @@ jobs:
         with:
           creds: ${{ env.AZURE_CREDENTIALS }}
 
-      # Paso 3: Verificar grupo de recursos
-      - name: Verificar existencia del grupo de recursos
+      # Paso 3: Verificar que el grupo de recursos existe antes de continuar
+      - name: Verificar si el grupo de recursos existe
         run: |
+          echo "Verificando existencia del grupo de recursos..."
           if ! az group exists --name $RESOURCE_GROUP --subscription $AZURE_SUBSCRIPTION_ID | grep true; then
-            echo "::error::El grupo de recursos no existe"
+            echo "❌ El grupo de recursos no existe. Abortando ejecución del pipeline."
             exit 1
           fi
+          echo "✅ El grupo de recursos existe."
 
-      # Paso 4: Login al ACR
-      - name: Login al Azure Container Registry
-        run: az acr login --name ${ACR_NAME%%.*}
-
-      # Paso 5: Obtener último tag de versión
-      - name: Obtener última versión del tag
-        id: get-tag
+      # Paso 5: Obtener versión del último release o usar timestamp
+      - name: Obtener versión de la imagen
+        id: get-version
         run: |
-          git fetch --tags
-          LATEST_TAG=$(git describe --tags --abbrev=0 || echo "v0.0.0")
-          echo "latest_tag=$LATEST_TAG" >> $GITHUB_OUTPUT
-
-      # Paso 6: Verificar si la imagen ya existe en el ACR
-      - name: Verificar imagen en ACR
-        id: check-image
-        run: |
-          TAGS=$(az acr repository show-tags --name $ACR_NAME --repository $SERVICE_NAME --output tsv)
-          if [[ " $TAGS " =~ " ${{ steps.get-tag.outputs.latest_tag }} " ]]; then
-            echo "existe=true" >> $GITHUB_OUTPUT
+          if git describe --tags --exact-match &> /dev/null; then
+            VERSION=$(git describe --tags --abbrev=0)
           else
-            echo "existe=false" >> $GITHUB_OUTPUT
+            VERSION=$(date +%Y%m%d%H%M%S)
           fi
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
 
-      # Paso 7: Construir y subir imagen solo si no existe
+      # Paso 6: Construir y subir imagen con doble tag
       - name: Construir y subir imagen
-        if: steps.check-image.outputs.existe == 'false'
         run: |
-          docker build -t $ACR_NAME/$SERVICE_NAME:${{ steps.get-tag.outputs.latest_tag }} -t $ACR_NAME/$SERVICE_NAME:latest .
-          docker push $ACR_NAME/$SERVICE_NAME:${{ steps.get-tag.outputs.latest_tag }}
+          docker build -t $ACR_NAME/$SERVICE_NAME:${{ steps.get-version.outputs.version }} -t $ACR_NAME/$SERVICE_NAME:latest .
+          docker push $ACR_NAME/$SERVICE_NAME:${{ steps.get-version.outputs.version }}
           docker push $ACR_NAME/$SERVICE_NAME:latest
 
-      # Paso 8: Desplegar solo si hay nueva imagen
-      - name: Desplegar en Azure Container App
-        if: steps.check-image.outputs.existe == 'false'
+      # Paso 7: Desplegar la imagen modificada en sus Container App
+      - name: Despliegue en Azure Container App
         run: |
           az containerapp update \
             --name $SERVICE_NAME \
