@@ -1,3 +1,10 @@
+## [1.1.1](https://github.com/MicroTodoSuite/microservice-app-frontend/compare/v1.1.0...v1.1.1) (2025-04-25)
+
+
+### Bug Fixes
+
+* **pipeline:** update condition of pipeline ([2c60870](https://github.com/MicroTodoSuite/microservice-app-frontend/commit/2c60870a78fbf4c6f6a8c56f0d21f9df6b3f4579))
+
 # [1.1.0](https://github.com/MicroTodoSuite/microservice-app-frontend/compare/v1.0.0...v1.1.0) (2025-04-25)
 
 
