@@ -52,7 +52,7 @@ jobs:
       - name: Verificar si el grupo de recursos existe
         run: |
           echo "Verificando existencia del grupo de recursos..."
-          if ! az group exists --name $RESOURCE_GROUP --subscription $AZURE_SUBSCRIPTION_ID | grep true; then
+          if ! az group exists --name ${{ env.RESOURCE_GROUP }} --subscription ${{ env.AZURE_SUBSCRIPTION_ID }} | grep true; then
             echo "❌ El grupo de recursos no existe. Abortando ejecución del pipeline."
             exit 1
           fi
@@ -73,39 +73,39 @@ jobs:
       # Paso 6: Construir y subir imagen con doble tag
       - name: Construir y subir imagen
         run: |
-          docker build -t $ACR_NAME/$SERVICE_NAME:${{ steps.get-version.outputs.version }} -t $ACR_NAME/$SERVICE_NAME:latest .
-          docker push $ACR_NAME/$SERVICE_NAME:${{ steps.get-version.outputs.version }}
-          docker push $ACR_NAME/$SERVICE_NAME:latest
+          docker build -t $ACR_NAME/${{ env.SERVICE_NAME }}:${{ steps.get-version.outputs.version }} -t $ACR_NAME/${{ env.SERVICE_NAME }}:latest .
+          docker push $ACR_NAME/${{ env.SERVICE_NAME }}:${{ steps.get-version.outputs.version }}
+          docker push $ACR_NAME/${{ env.SERVICE_NAME }}:latest
 
       # Paso 7: Desplegar la imagen modificada en sus Container App
       - name: Despliegue en Azure Container App
         if: ${{ github.event_name == 'repository_dispatch' }}
         run: |
           # Actualizar la Container App con la imagen correcta
-          echo "🚀 Actualizando $SERVICE_NAME..."
+          echo "🚀 Actualizando ${{ env.SERVICE_NAME }}..."
           az containerapp update \
-            --name $SERVICE_NAME \
-            --resource-group $RESOURCE_GROUP \
-            --image $ACR_NAME/$SERVICE_NAME:latest \
-            --subscription $AZURE_SUBSCRIPTION_ID
+            --name ${{ env.SERVICE_NAME }} \
+            --resource-group ${{ env.RESOURCE_GROUP }} \
+            --image $ACR_NAME/${{ env.SERVICE_NAME }}:latest \
+            --subscription ${{ env.AZURE_SUBSCRIPTION_ID }}
 
           # Reiniciar la revisión
           echo "🔄 Reiniciando container de $app..."
           revision=$(az containerapp show \
-            --name $SERVICE_NAME \
-            --resource-group $RESOURCE_GROUP \
-            --subscription $AZURE_SUBSCRIPTION_ID \
+            --name ${{ env.SERVICE_NAME }} \
+            --resource-group ${{ env.RESOURCE_GROUP }} \
+            --subscription ${{ env.AZURE_SUBSCRIPTION_ID }} \
             --query "properties.latestReadyRevisionName" \
             --output tsv)
 
           if [[ -n "$revision" ]]; then
             az containerapp revision restart \
-              --name $SERVICE_NAME \
-              --resource-group $RESOURCE_GROUP \
+              --name ${{ env.SERVICE_NAME }} \
+              --resource-group ${{ env.RESOURCE_GROUP }} \
               --revision $revision \
-              --subscription $AZURE_SUBSCRIPTION_ID
+              --subscription ${{ env.AZURE_SUBSCRIPTION_ID }}
           else
-            echo "⚠️ No se encontró revisión lista para $SERVICE_NAME, omitiendo reinicio"
+            echo "⚠️ No se encontró revisión lista para ${{ env.SERVICE_NAME }}, omitiendo reinicio"
           fi
-          echo "✅ $SERVICE_NAME actualizado correctamente"
+          echo "✅ ${{ env.SERVICE_NAME }} actualizado correctamente"
           echo "-------------------------------------------"
