@@ -1,9 +1,9 @@
 <template>
   <nav class="navbar navbar-toggleable-md navbar-inverse bg-inverse fixed-top">
-    <a class="navbar-brand" href="#">TODOs app microservice</a>
+    <a class="navbar-brand" href="#">TODOs app</a>
     <ul class="navbar-nav mr-auto">
       <li class="nav-item" v-show="isAdmin()">
-        <a class="btn btn-success mr-sm-2" href="#/admin">Administrador</a>
+        <a class="btn btn-success mr-sm-2" href="#/admin">Admin</a>
       </li>
     </ul>
 
