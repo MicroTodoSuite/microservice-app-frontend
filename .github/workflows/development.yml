@@ -51,6 +51,9 @@ jobs:
       # Paso 3: Verificar que el grupo de recursos existe antes de continuar
       - name: Verificar si el grupo de recursos existe
         run: |
+          echo "DEBUG: Valores críticos:"
+          echo "Nombre del grupo: '${{ env.RESOURCE_GROUP }}'"
+          echo "Subscription ID: '${{ env.AZURE_SUBSCRIPTION_ID }}'"
           echo "Verificando existencia del grupo de recursos..."
           if ! az group exists --name ${{ env.RESOURCE_GROUP }} --subscription ${{ env.AZURE_SUBSCRIPTION_ID }} | grep true; then
             echo "❌ El grupo de recursos no existe. Abortando ejecución del pipeline."
