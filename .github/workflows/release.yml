@@ -8,21 +8,22 @@ on:
 jobs:
   release:
     runs-on: ubuntu-latest
+    container: 
+      image: node:8.17.0-stretch # Node 8 + Debian 9 (incluye Python 2.7)
+      options: --user root
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Instalar Node.js 8.17.0
+      - name: Verificar Node.js y Python
         run: |
-          curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
-          export NVM_DIR="$HOME/.nvm"
-          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-          nvm install 8.17.0
-          nvm use 8.17.0
+          node -v # Debe mostrar v8.17.0
+          python --version # Debe mostrar Python 2.7.x
 
       - name: Instalar dependencias
-        run: npm ci
+        run: |
+          npm ci
 
       - name: Ejecutar Semantic Release
         env:
