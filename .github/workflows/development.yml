@@ -82,7 +82,7 @@ jobs:
 
       # Paso 7: Desplegar la imagen modificada en sus Container App
       - name: Despliegue en Azure Container App
-        if: ${{ github.event_name == 'repository_dispatch' }}
+        if: ${{ github.event_name != 'repository_dispatch' }}
         run: |
           # Actualizar la Container App con la imagen correcta
           echo "🚀 Actualizando ${{ env.SERVICE_NAME }}..."
