@@ -1,3 +1,24 @@
+# [1.1.0](https://github.com/MicroTodoSuite/microservice-app-frontend/compare/v1.0.0...v1.1.0) (2025-04-25)
+
+
+### Bug Fixes
+
+* correction to the deployment pipeline ([aa9373b](https://github.com/MicroTodoSuite/microservice-app-frontend/commit/aa9373b14aed0c6583de83f6ed13a17f7b4f1e82))
+* development pipeline corrected ([6e96880](https://github.com/MicroTodoSuite/microservice-app-frontend/commit/6e9688098b2b00fd7972646a46f5cb1edcb3cb58))
+* nav corrected ([f9df75f](https://github.com/MicroTodoSuite/microservice-app-frontend/commit/f9df75f0bd9a925459543d4aec08b4b6cee9becc))
+* **debug:** debug pipeline ([3572f2f](https://github.com/MicroTodoSuite/microservice-app-frontend/commit/3572f2f47951a3babf8c7c030aa65500f3ffa6c9))
+* remove debug pipeline ([8879be3](https://github.com/MicroTodoSuite/microservice-app-frontend/commit/8879be3372ce989adb2efc20354ecce408f4a3d6))
+* typo corrected ([cd970f6](https://github.com/MicroTodoSuite/microservice-app-frontend/commit/cd970f63fdb91711bdaf84ae8c5c45763b8af783))
+* update pipeline ([81b420b](https://github.com/MicroTodoSuite/microservice-app-frontend/commit/81b420b45c3becf1c14a7f9c0c9422bafc94b445))
+* update pipeline of development ([abd9332](https://github.com/MicroTodoSuite/microservice-app-frontend/commit/abd93328c902dcc3e9ccd09eedb5b501fc29791b))
+* update pipeline of development ([4041d60](https://github.com/MicroTodoSuite/microservice-app-frontend/commit/4041d60c6445f2afba456df77fef8e75469b6994))
+* update pipeline with variables of env ([981bd90](https://github.com/MicroTodoSuite/microservice-app-frontend/commit/981bd90361b642463e712de1379924ce68b0212e))
+
+
+### Features
+
+* modified pipeline to handle versioning on published frontend images ([eb6920f](https://github.com/MicroTodoSuite/microservice-app-frontend/commit/eb6920f561bbd0b6374a17f47544679ce8063ba7))
+
 # 1.0.0 (2025-04-25)
 
 
