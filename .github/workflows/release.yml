@@ -7,7 +7,7 @@ on:
 
 jobs:
   release:
-    runs-on: ubuntu-20.04 # <-- Versión anterior que sí incluye Python 2.7
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout
@@ -20,12 +20,6 @@ jobs:
           [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
           nvm install 8.17.0
           nvm use 8.17.0
-
-      - name: Instalar Python 2.7
-        run: sudo apt-get install -y python2
-
-      - name: Configurar Python para node-gyp
-        run: npm config set python /usr/bin/python2
 
       - name: Instalar dependencias
         run: npm ci
