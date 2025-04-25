@@ -65,7 +65,13 @@
     "webpack-bundle-analyzer": "^2.2.1",
     "webpack-dev-middleware": "^1.10.0",
     "webpack-hot-middleware": "^2.18.0",
-    "webpack-merge": "^4.1.0"
+    "webpack-merge": "^4.1.0",
+    "semantic-release": "^15.14.0",
+    "@semantic-release/commit-analyzer": "^6.3.3",
+    "@semantic-release/release-notes-generator": "^7.3.5",
+    "@semantic-release/github": "^5.5.8",
+    "@semantic-release/changelog": "^3.0.6",
+    "@semantic-release/git": "^7.0.18"
   },
   "engines": {
     "node": ">= 4.0.0",

@@ -1,0 +1,31 @@
+name: Release
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    container:
+      image: node:8.17.0-buster # Debian 10 (GLIBC 2.28 + Python 2.7)
+      options: --user root
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Verificar entorno
+        run: |
+          node -v # v8.17.0
+          python --version # Python 2.7.16
+          ldd --version | grep GLIBC # GLIBC 2.28
+
+      - name: Instalar dependencias
+        run: npm ci
+
+      - name: Ejecutar Semantic Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+        run: npx semantic-release
