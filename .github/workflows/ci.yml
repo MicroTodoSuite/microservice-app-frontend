@@ -18,6 +18,7 @@ jobs:
       service-name: frontend
       language: node
       sonar-project-key: MicroTodoSuite_frontend
+      sonar-host-url: ${{ vars.SONAR_HOST_URL }}
     secrets: inherit
 
   release:
