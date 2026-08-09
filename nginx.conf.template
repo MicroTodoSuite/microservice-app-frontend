@@ -1,5 +1,10 @@
 worker_processes 1;
 
+# Non-root NGINX (nginxinc/nginx-unprivileged) can't write to the default
+# /run/nginx.pid; this template replaces the whole nginx.conf, so the base
+# image's own /tmp/nginx.pid accommodation has to be restated here.
+pid /tmp/nginx.pid;
+
 events { worker_connections 1024; }
 
 http {
