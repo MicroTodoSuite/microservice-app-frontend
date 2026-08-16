@@ -16,10 +16,12 @@ FROM nginxinc/nginx-unprivileged:alpine3.23@sha256:6320020c7da8714feab524e02c08c
 USER root
 RUN apk del --no-cache curl libcurl
 
-COPY --from=build --chown=nginx:root /src/dist /usr/share/nginx/html
-COPY --chown=nginx:root nginx.conf.template /etc/nginx/nginx.conf.template
-COPY --chown=nginx:root --chmod=0755 entrypoint.sh /entrypoint.sh
+COPY --from=build --chown=101:101 /src/dist /usr/share/nginx/html
+COPY --chown=101:101 nginx.conf.template /etc/nginx/nginx.conf.template
+COPY --chown=101:101 --chmod=0755 entrypoint.sh /entrypoint.sh
 
-USER nginx
+# nginx-unprivileged maps its nginx account to UID/GID 101. A numeric image
+# user lets Kubernetes verify runAsNonRoot before starting the container.
+USER 101:101
 EXPOSE 8080
 ENTRYPOINT ["/entrypoint.sh"]
