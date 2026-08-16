@@ -36,6 +36,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@use 'sass:math';
+
 $offset: 187;
 $duration: 1.4s;
 .spinner-container {
@@ -81,7 +83,7 @@ $duration: 1.4s;
 @keyframes dash {
  0% { stroke-dashoffset: $offset; }
  50% {
-   stroke-dashoffset: $offset/4;
+   stroke-dashoffset: math.div($offset, 4);
    transform:rotate(135deg);
  }
  100% {

@@ -1,33 +1,29 @@
-import Vue from 'vue'
+import { createRouter, createWebHashHistory } from 'vue-router'
+import Auth from '../auth'
+import Login from '../components/Login.vue'
+import Todos from '../components/Todos.vue'
 
-import Auth from '@/auth'
-import Router from 'vue-router'
-Vue.use(Router)
+function requireLoggedIn (to) {
+  if (!Auth.isLoggedIn()) {
+    return { path: '/login', query: { redirect: to.fullPath } }
+  }
+  return true
+}
 
-export default new Router({
+export default createRouter({
+  history: createWebHashHistory(),
   routes: [
     {
       path: '/login',
       name: 'login',
-      component: require('@/components/Login.vue')
+      component: Login
     },
     {
       path: '/',
       alias: '/todos',
       name: 'todos',
-      component: require('@/components/Todos.vue'),
+      component: Todos,
       beforeEnter: requireLoggedIn
     }
   ]
 })
-
-function requireLoggedIn (to, from, next) {
-  if (!Auth.isLoggedIn()) {
-    next({
-      path: '/login',
-      query: { redirect: to.fullPath }
-    })
-  } else {
-    next()
-  }
-}
