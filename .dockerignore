@@ -1,0 +1,12 @@
+.git
+.github
+.gitignore
+.babelrc
+.eslintrc.js
+CHANGELOG.md
+README.md
+build
+config
+dist
+node_modules
+npm-debug.log*

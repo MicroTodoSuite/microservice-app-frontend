@@ -53,22 +53,16 @@
 </template>
 
 <script>
-import AppNav from '@/components/AppNav'
-import TodoItem from '@/components/TodoItem'
-import Spinner from '@/components/common/Spinner'
+import AppNav from '@/components/AppNav.vue'
+import TodoItem from '@/components/TodoItem.vue'
+import Spinner from '@/components/common/Spinner.vue'
 
 export default {
   name: 'todos',
   components: {AppNav, TodoItem, Spinner},
-  props: {
-    tasks: {
-      default: function () {
-        return []
-      }
-    }
-  },
   data () {
     return {
+      tasks: [],
       isProcessing: false,
       errorMessage: '',
       newTask: ''
@@ -109,7 +103,7 @@ export default {
         this.$http.post('/todos', task).then(response => {
           this.newTask = ''
           this.isProcessing = false
-          this.tasks.push(task)
+          this.tasks.push(response.body)
         }, error => {
           this.isProcessing = false
           this.errorMessage = JSON.stringify(error.body) + '. Response code: ' + error.status
@@ -123,7 +117,7 @@ export default {
       this.isProcessing = true
       this.errorMessage = ''
 
-      this.$http.delete('/todos/' + item.id).then(response => {
+      this.$http.delete('/todos/' + item.id).then(() => {
         this.isProcessing = false
         this.tasks.splice(index, 1)
       }, error => {
