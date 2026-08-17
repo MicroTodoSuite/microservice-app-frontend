@@ -11,6 +11,8 @@ http {
   include       mime.types;
   default_type  application/octet-stream;
   sendfile      on;
+  resolver      ${NGINX_RESOLVER} valid=10s ipv6=off;
+  resolver_timeout 5s;
 
   server {
     listen 8080;
@@ -18,23 +20,29 @@ http {
     root /usr/share/nginx/html;
     index index.html;
 
+    # Keep NGINX healthy while RollingSync creates backend Services later in
+    # the same environment step. Variables defer DNS lookup until a request.
+    set $auth_api_address ${AUTH_API_ADDRESS};
+    set $todos_api_address ${TODOS_API_ADDRESS};
+    set $zipkin_url ${ZIPKIN_URL};
+
     # SPA fallback
     location / {
       try_files $uri $uri/ /index.html;
     }
 
     location /login {
-      proxy_pass ${AUTH_API_ADDRESS}/login;
+      proxy_pass $auth_api_address/login;
       proxy_http_version 1.1;
     }
 
     location /todos {
-      proxy_pass ${TODOS_API_ADDRESS}/todos;
+      proxy_pass $todos_api_address/todos;
       proxy_http_version 1.1;
     }
 
     location /zipkin {
-      proxy_pass ${ZIPKIN_URL};
+      proxy_pass $zipkin_url;
       proxy_http_version 1.1;
     }
 
