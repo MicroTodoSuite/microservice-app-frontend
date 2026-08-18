@@ -1,0 +1,33 @@
+name: perf
+
+# Performance gate (spec 007 / US4). Nightly Locust run against the full stack via
+# the reusable stack-tests workflow; fails on request errors or a p95 regression.
+
+on:
+  schedule:
+    - cron: '0 3 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  perf:
+    uses: MicroTodoSuite/.github/.github/workflows/stack-tests.yml@94850da6cdcdb1ac1f9a5d65f0bd3dc8e8658eab
+    with:
+      gate-name: performance
+      compose-file: e2e/compose.yaml
+      stack-repos: >-
+        microservice-app-auth-api
+        microservice-app-todos-api
+        microservice-app-users-api
+        microservice-app-log-message-processor
+      ready-command: >-
+        timeout 240 bash -c 'until curl -sf -X POST http://localhost:8080/login
+        -H "content-type: application/json"
+        -d "{\"username\":\"admin\",\"password\":\"admin\"}" -o /dev/null;
+        do sleep 3; done'
+      stack-command: >-
+        python -m pip install --quiet locust &&
+        locust -f "$CALLER_DIR/e2e/perf/locustfile.py" --headless
+        -u 10 -r 5 -t 30s --host http://localhost:8080
