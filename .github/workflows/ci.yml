@@ -19,6 +19,8 @@ jobs:
       language: node
       sonar-project-key: MicroTodoSuite_frontend
       sonar-host-url: ${{ vars.SONAR_HOST_URL }}
+      # Unit gate active: ci/unit.sh runs Jest + coverage over the Vuex store (spec 006 T014).
+      run-unit: true
     secrets: inherit
 
   release:

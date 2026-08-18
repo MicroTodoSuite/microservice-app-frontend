@@ -1,0 +1,11 @@
+# Trivy vulnerability exceptions (spec 006 / T002, FR-002).
+# Only upstream-UNFIXABLE findings may be listed here (none are, so this file
+# has NO CVE entries). Fixable findings are remediated, not silenced.
+#
+# Remediated this iteration via npm "overrides": nanoid, node-fetch, postcss.
+#
+# KNOWN OPEN (NOT silenced): bootstrap-vue 0.22.1 has a fixable HIGH whose fix
+# (>=2.0.0-rc.12) is a two-major bump that changes .vue templates and requires a
+# validated webpack/UI build. Tracked as a follow-up under T013 rather than
+# ignored. Note: the blocking image-scan gate runs on the nginx static image,
+# which carries no npm manifest, so this does not block the pipeline gate.
