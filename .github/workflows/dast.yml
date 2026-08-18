@@ -1,0 +1,32 @@
+name: dast
+
+# Dynamic application security testing (spec 007 / US5). Nightly OWASP ZAP baseline
+# against the running stack via the reusable stack-tests workflow; high-severity
+# alerts fail the gate.
+
+on:
+  schedule:
+    - cron: '30 3 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  dast:
+    uses: MicroTodoSuite/.github/.github/workflows/stack-tests.yml@94850da6cdcdb1ac1f9a5d65f0bd3dc8e8658eab
+    with:
+      gate-name: dast
+      compose-file: e2e/compose.yaml
+      stack-repos: >-
+        microservice-app-auth-api
+        microservice-app-todos-api
+        microservice-app-users-api
+        microservice-app-log-message-processor
+      ready-command: >-
+        timeout 240 bash -c 'until curl -sf http://localhost:8080/ -o /dev/null; do sleep 3; done'
+      stack-command: >-
+        docker run --rm --network microtodosuite-e2e_default
+        -v "$CALLER_DIR/e2e/dast:/zap/wrk:rw"
+        ghcr.io/zaproxy/zaproxy:stable zap-baseline.py
+        -t http://frontend:8080 -c rules.tsv -I
