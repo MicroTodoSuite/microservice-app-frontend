@@ -21,6 +21,8 @@ services:
     environment:
       SERVER_PORT: "8083"
       JWT_SECRET: e2e-shared-secret
+    ports:
+      - "8083:8083"
 
   auth-api:
     build:
@@ -29,6 +31,8 @@ services:
       AUTH_API_PORT: "8000"
       USERS_API_ADDRESS: http://users-api:8083
       JWT_SECRET: e2e-shared-secret
+    ports:
+      - "8000:8000"
     depends_on:
       - users-api
 
@@ -41,6 +45,8 @@ services:
       REDIS_HOST: redis
       REDIS_PORT: "6379"
       REDIS_CHANNEL: log_channel
+    ports:
+      - "8082:8082"
     depends_on:
       redis:
         condition: service_healthy
