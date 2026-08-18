@@ -1,0 +1,71 @@
+# End-to-end stack (spec 007 / T005). Builds all five services from sibling repos
+# and wires them exactly as the app expects, so Playwright can drive the real UI.
+# Locally the sibling repos are already checked out under MicroTodoSuite/; CI
+# checks them out as siblings before `docker compose build`.
+name: microtodosuite-e2e
+
+services:
+  redis:
+    image: redis:7-alpine
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 2s
+      timeout: 3s
+      retries: 20
+
+  users-api:
+    # distroless (no shell) -> no container healthcheck; readiness is proven
+    # end-to-end by a real login through the frontend before the e2e run.
+    build:
+      context: ../../microservice-app-users-api
+    environment:
+      SERVER_PORT: "8083"
+      JWT_SECRET: e2e-shared-secret
+
+  auth-api:
+    build:
+      context: ../../microservice-app-auth-api
+    environment:
+      AUTH_API_PORT: "8000"
+      USERS_API_ADDRESS: http://users-api:8083
+      JWT_SECRET: e2e-shared-secret
+    depends_on:
+      - users-api
+
+  todos-api:
+    build:
+      context: ../../microservice-app-todos-api
+    environment:
+      TODO_API_PORT: "8082"
+      JWT_SECRET: e2e-shared-secret
+      REDIS_HOST: redis
+      REDIS_PORT: "6379"
+      REDIS_CHANNEL: log_channel
+    depends_on:
+      redis:
+        condition: service_healthy
+
+  log-message-processor:
+    build:
+      context: ../../microservice-app-log-message-processor
+    environment:
+      PORT: "8084"
+      REDIS_HOST: redis
+      REDIS_PORT: "6379"
+      REDIS_CHANNEL: log_channel
+    depends_on:
+      redis:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: ..
+    environment:
+      AUTH_API_ADDRESS: http://auth-api:8000
+      TODOS_API_ADDRESS: http://todos-api:8082
+      ZIPKIN_URL: http://localhost:9411/api/v2/spans
+    ports:
+      - "8080:8080"
+    depends_on:
+      - auth-api
+      - todos-api
