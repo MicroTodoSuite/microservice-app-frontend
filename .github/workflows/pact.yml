@@ -1,0 +1,31 @@
+name: pact
+
+# Consumer/provider contract verification (spec 007 / US1, SC-002). Replays the
+# frontend consumer pact against the running todos-api provider via the reusable
+# stack-tests workflow; a provider that breaks the consumer contract fails.
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  pact:
+    uses: MicroTodoSuite/.github/.github/workflows/stack-tests.yml@94850da6cdcdb1ac1f9a5d65f0bd3dc8e8658eab
+    with:
+      gate-name: pact
+      compose-file: e2e/compose.yaml
+      stack-repos: >-
+        microservice-app-auth-api
+        microservice-app-todos-api
+        microservice-app-users-api
+        microservice-app-log-message-processor
+      ready-command: >-
+        timeout 240 bash -c 'until curl -sf -X POST http://localhost:8080/login
+        -H "content-type: application/json"
+        -d "{\"username\":\"admin\",\"password\":\"admin\"}" -o /dev/null;
+        do sleep 3; done'
+      stack-command: >-
+        cd "$CALLER_DIR/e2e" && bash pact/verify.sh
