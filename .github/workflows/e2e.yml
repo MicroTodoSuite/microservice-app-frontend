@@ -1,0 +1,33 @@
+name: e2e
+
+# End-to-end gate (spec 007 / US3). Calls the central reusable stack-tests
+# workflow, which checks out the sibling service repos, builds the full compose
+# stack, and runs the Playwright journeys against the real UI.
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  e2e:
+    uses: MicroTodoSuite/.github/.github/workflows/stack-tests.yml@94850da6cdcdb1ac1f9a5d65f0bd3dc8e8658eab
+    with:
+      gate-name: e2e
+      compose-file: e2e/compose.yaml
+      stack-repos: >-
+        microservice-app-auth-api
+        microservice-app-todos-api
+        microservice-app-users-api
+        microservice-app-log-message-processor
+      ready-command: >-
+        timeout 240 bash -c 'until curl -sf -X POST http://localhost:8080/login
+        -H "content-type: application/json"
+        -d "{\"username\":\"admin\",\"password\":\"admin\"}" -o /dev/null;
+        do sleep 3; done'
+      stack-command: >-
+        cd "$CALLER_DIR/e2e" && npm ci &&
+        npx playwright install --with-deps chromium chromium-headless-shell &&
+        npx playwright test --retries=1
