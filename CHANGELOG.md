@@ -1,3 +1,11 @@
+## [1.1.3](https://github.com/MicroTodoSuite/microservice-app-frontend/compare/v1.1.2...v1.1.3) (2026-08-19)
+
+
+### Bug Fixes
+
+* defer backend DNS resolution ([d2d28c5](https://github.com/MicroTodoSuite/microservice-app-frontend/commit/d2d28c529abf1d803bdd2f83084d48832cab1ac2))
+* use numeric runtime identity ([f316b58](https://github.com/MicroTodoSuite/microservice-app-frontend/commit/f316b58942a4804ad704794d25a22c58a44f2fd9))
+
 ## [1.1.2](https://github.com/MicroTodoSuite/microservice-app-frontend/compare/v1.1.1...v1.1.2) (2025-04-25)
 
 
