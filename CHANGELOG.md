@@ -1,3 +1,10 @@
+## [1.1.4](https://github.com/MicroTodoSuite/microservice-app-frontend/compare/v1.1.3...v1.1.4) (2026-08-24)
+
+
+### Bug Fixes
+
+* **ci:** publish images to the migrated AWS account ([72c12c8](https://github.com/MicroTodoSuite/microservice-app-frontend/commit/72c12c8fe66a411f4ed3a1747559e0f7e73d66ff))
+
 ## [1.1.3](https://github.com/MicroTodoSuite/microservice-app-frontend/compare/v1.1.2...v1.1.3) (2026-08-19)
 
 
