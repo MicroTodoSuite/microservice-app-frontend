@@ -1,3 +1,10 @@
+## [1.1.5](https://github.com/MicroTodoSuite/microservice-app-frontend/compare/v1.1.4...v1.1.5) (2026-08-24)
+
+
+### Bug Fixes
+
+* restrict nginx_status to localhost only ([c1cecdb](https://github.com/MicroTodoSuite/microservice-app-frontend/commit/c1cecdbca07d3a03465781edb4449b17f31e6e02))
+
 ## [1.1.4](https://github.com/MicroTodoSuite/microservice-app-frontend/compare/v1.1.3...v1.1.4) (2026-08-24)
 
 
