@@ -5,6 +5,7 @@ COPY package.json package-lock.json ./
 RUN npm ci --ignore-scripts
 
 COPY index.html vite.config.js vitest.config.js eslint.config.js ./
+COPY nginx.conf.template entrypoint.sh ./
 COPY src ./src
 COPY test ./test
 RUN npm run lint \
