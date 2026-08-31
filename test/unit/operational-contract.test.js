@@ -1,4 +1,5 @@
 import { readFileSync } from 'node:fs'
+import { resolve } from 'node:path'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import http, {
   configureRuntimeConfig,
@@ -53,7 +54,7 @@ describe('frontend operational contract', () => {
   it('preserves a caller correlation id and emits value-blind request telemetry', async () => {
     const events = []
     window.addEventListener('microtodosuite:http', event => events.push(event.detail), { once: true })
-    globalThis.fetch = vi.fn().mockResolvedValue(new Response('', { status: 204 }))
+    globalThis.fetch = vi.fn().mockResolvedValue(new Response(null, { status: 204 }))
 
     await http.get('/todos', { correlationId: 'browser-journey-123' })
 
@@ -82,14 +83,16 @@ describe('frontend operational contract', () => {
   })
 
   it('declares separate startup, readiness, and liveness endpoints in nginx', () => {
-    const nginx = readFileSync(new URL('../../nginx.conf.template', import.meta.url), 'utf8')
-    const entrypoint = readFileSync(new URL('../../entrypoint.sh', import.meta.url), 'utf8')
+    const nginx = readFileSync(resolve('nginx.conf.template'), 'utf8')
+    const entrypoint = readFileSync(resolve('entrypoint.sh'), 'utf8')
 
     for (const path of ['/health/startup', '/health/ready', '/health/live']) {
       expect(nginx).toContain(`location = ${path}`)
     }
     expect(nginx).toContain('location = /runtime-config.json')
+    expect(nginx).toContain('alias /tmp/runtime-config.json')
     expect(entrypoint).toContain('FRONTEND_REQUEST_TIMEOUT_MS')
     expect(entrypoint).toContain('FRONTEND_FEATURE_VERBOSE_ERRORS')
+    expect(entrypoint).toContain('> /tmp/runtime-config.json')
   })
 })
