@@ -5,6 +5,7 @@ COPY package.json package-lock.json ./
 RUN npm ci --ignore-scripts
 
 COPY index.html vite.config.js vitest.config.js eslint.config.js ./
+COPY nginx.conf.template entrypoint.sh ./
 COPY src ./src
 COPY test ./test
 RUN npm run lint \
@@ -14,7 +15,10 @@ RUN npm run lint \
 FROM nginxinc/nginx-unprivileged:alpine3.23@sha256:6320020c7da8714feab524e02c08c5a1958675c4e68700e93a2fd8970b065786
 
 USER root
-RUN apk del --no-cache curl libcurl
+RUN apk update \
+    && apk add --upgrade --no-cache libcrypto3=3.5.8-r0 libssl3=3.5.8-r0 \
+    && apk del --no-cache curl libcurl \
+    && rm -rf /var/cache/apk/*
 
 COPY --from=build --chown=101:101 /src/dist /usr/share/nginx/html
 COPY --chown=101:101 nginx.conf.template /etc/nginx/nginx.conf.template
