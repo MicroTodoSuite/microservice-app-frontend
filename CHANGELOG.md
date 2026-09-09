@@ -1,3 +1,17 @@
+# [1.2.0](https://github.com/MicroTodoSuite/microservice-app-frontend/compare/v1.1.5...v1.2.0) (2026-09-09)
+
+
+### Bug Fixes
+
+* **ci:** target replacement AWS account ([5f0b730](https://github.com/MicroTodoSuite/microservice-app-frontend/commit/5f0b73055ed1b9487b7d27cc252250644c73f000))
+* **security:** update vulnerable Alpine packages ([6dca807](https://github.com/MicroTodoSuite/microservice-app-frontend/commit/6dca807f65db3d94e19505f9063de12e9cab7fe5))
+* **us3:** remediate frontend runtime CVE ([4eb7066](https://github.com/MicroTodoSuite/microservice-app-frontend/commit/4eb7066eec61b8a2d419cfdc6f9e465ff2bd92df))
+
+
+### Features
+
+* **us3:** implement frontend operational contract ([8369436](https://github.com/MicroTodoSuite/microservice-app-frontend/commit/836943664766d86f8f73ec746c40c1480bd9dcf0))
+
 ## [1.1.5](https://github.com/MicroTodoSuite/microservice-app-frontend/compare/v1.1.4...v1.1.5) (2026-08-24)
 
 
