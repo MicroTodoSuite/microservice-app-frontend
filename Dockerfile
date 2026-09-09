@@ -16,7 +16,11 @@ FROM nginxinc/nginx-unprivileged:alpine3.23@sha256:6320020c7da8714feab524e02c08c
 
 USER root
 RUN apk update \
-    && apk add --upgrade --no-cache libcrypto3=3.5.8-r0 libssl3=3.5.8-r0 \
+    && apk add --upgrade --no-cache \
+        libcrypto3=3.5.8-r0 \
+        libexpat=2.8.4-r0 \
+        libssl3=3.5.8-r0 \
+        libuuid=2.41.6-r1 \
     && apk del --no-cache curl libcurl \
     && rm -rf /var/cache/apk/*
 
