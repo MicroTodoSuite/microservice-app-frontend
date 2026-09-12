@@ -95,4 +95,44 @@ describe('frontend operational contract', () => {
     expect(entrypoint).toContain('FRONTEND_FEATURE_VERBOSE_ERRORS')
     expect(entrypoint).toContain('> /tmp/runtime-config.json')
   })
+
+  // Spec 010: nginx is the frontend's entry point, so it starts or continues
+  // each request's trace and propagates W3C context to the APIs. Only the two
+  // proxied locations are traced; probes, runtime config, and static files
+  // would bury real requests.
+  it('traces only the proxied API locations through OpenTelemetry', () => {
+    const nginx = readFileSync(resolve('nginx.conf.template'), 'utf8')
+    const locationBody = name => {
+      // A location body may hold ${VAR} placeholders, whose braces are part of it.
+      const match = nginx.match(new RegExp(`location ${name} \\{((?:\\$\\{[A-Z_]+\\}|[^}])*)\\}`))
+      expect(match, `location ${name} must exist`).toBeTruthy()
+      return match[1]
+    }
+
+    expect(nginx).toMatch(/^load_module modules\/ngx_otel_module\.so;$/m)
+    expect(nginx).toMatch(/otel_exporter\s*\{\s*endpoint \$\{OTEL_EXPORTER_OTLP_ENDPOINT\};\s*\}/)
+    expect(nginx).toContain('otel_service_name frontend;')
+
+    for (const name of ['/login', '/todos']) {
+      const body = locationBody(name)
+      expect(body).toContain('otel_trace ${FRONTEND_OTEL_TRACE};')
+      expect(body).toContain('otel_trace_context propagate;')
+    }
+    expect(nginx.match(/otel_trace /g)).toHaveLength(2)
+    expect(nginx).not.toMatch(/zipkin/i)
+  })
+
+  it('starts nginx with tracing switched by the OTLP endpoint on the OpenTelemetry image', () => {
+    const entrypoint = readFileSync(resolve('entrypoint.sh'), 'utf8')
+    const dockerfile = readFileSync(resolve('Dockerfile'), 'utf8')
+
+    expect(entrypoint).not.toMatch(/zipkin/i)
+    expect(entrypoint).toContain('FRONTEND_OTEL_TRACE=off')
+    expect(entrypoint).toContain('$${OTEL_EXPORTER_OTLP_ENDPOINT}')
+    expect(entrypoint).toContain('$${FRONTEND_OTEL_TRACE}')
+    expect(entrypoint).toMatch(/nginx -t/)
+    expect(dockerfile).toContain(
+      'FROM nginxinc/nginx-unprivileged:alpine3.23-otel@sha256:1490cbf02ddba36ae75ef947b570166c805a178898ebfbc3bb889e7580820052'
+    )
+  })
 })
