@@ -1,6 +1,6 @@
 ## Overview
 
-This service is the browser UI for the MicroTodoSuite distributed TODO application. It authenticates users, manages TODO items, and emits Zipkin traces; production assets are served by NGINX, which also proxies backend requests.
+This service is the browser UI for the MicroTodoSuite distributed TODO application. It authenticates users, manages TODO items, and its NGINX entry point emits OpenTelemetry traces for proxied API requests; production assets are served by NGINX, which also proxies backend requests.
 
 ## Stack
 
@@ -23,7 +23,7 @@ This service is the browser UI for the MicroTodoSuite distributed TODO applicati
 - `src/components/`: Vue single-file components for login, navigation, TODOs, TODO items, and the spinner.
 - `src/router/`: routes for `/login`, `/`, and the `/todos` alias, including the login guard.
 - `src/store/`: Vuex state, mutations, and local-storage persistence.
-- `src/auth.js` and `src/zipkin.js`: JWT authentication and Zipkin HTTP instrumentation plugins.
+- `src/auth.js` and `src/http.js`: JWT authentication and the HTTP client with correlation ids.
 - `build/` and `config/`: custom webpack 2 build/dev-server scripts and environment-specific build settings.
 - `static/`, `src/assets/`, and `index.html`: static and entry-page assets.
 - `Dockerfile`, `entrypoint.sh`, and `nginx.conf.template`: two-stage image build and runtime proxy configuration.
@@ -32,8 +32,8 @@ This service is the browser UI for the MicroTodoSuite distributed TODO applicati
 ## Conventions
 
 - Use Standard JavaScript style: two-space indentation, no semicolons, and lint both `.js` and `.vue` files.
-- Use the `@` alias for `src`; API calls remain relative (`/login`, `/todos`, `/zipkin`) and are routed by a proxy.
-- Authentication state and the JWT are persisted in browser local storage; Vue Resource interceptors add auth and Zipkin headers.
+- Use the `@` alias for `src`; API calls remain relative (`/login`, `/todos`) and are routed by a proxy.
+- Authentication state and the JWT are persisted in browser local storage; NGINX adds the W3C `traceparent` header to proxied API requests.
 - Keep project artifacts in English. Use short-lived trunk-based branches and feature flags for incomplete work; repository specifications are authoritative when present.
 - Write everything in English — branch names, commit messages, pull-request titles and bodies, review comments, code comments, documentation, and specification text. No bilingual sections. Changing this rule takes a recorded decision in `microservice-app-docs`, not a remark in conversation.
 - Open every pull request through `.github/pull_request_template.md` and follow `microservice-app-docs/docs/Pull request and task tracking conventions.md`: one concern per short-lived `<type>/<summary>` branch, a Conventional Commit title with a scope, and every template section filled. Constitution principle 13 makes this binding, not advisory.
@@ -46,8 +46,8 @@ This service is the browser UI for the MicroTodoSuite distributed TODO applicati
 ## Notes for the Kubernetes migration
 
 - The production image exposes and NGINX listens on TCP 8080. `PORT` only controls the development server; the production template does not substitute it.
-- Production requires `AUTH_API_ADDRESS`, `TODOS_API_ADDRESS`, and `ZIPKIN_URL`; `entrypoint.sh` substitutes them into NGINX configuration at startup. `ZIPKIN_URL` is missing from the README configuration list.
-- External dependencies are `auth-api` over HTTP, `todos-api` over HTTP, and a Zipkin HTTP collector. No direct database or Redis client is present.
+- Production requires `AUTH_API_ADDRESS` and `TODOS_API_ADDRESS`; `OTEL_EXPORTER_OTLP_ENDPOINT` is optional and turns tracing on. `entrypoint.sh` substitutes them into NGINX configuration at startup.
+- External dependencies are `auth-api` over HTTP, `todos-api` over HTTP, and, when configured, an OTLP/gRPC trace collector. No direct database or Redis client is present.
 - Preserve the SPA fallback and review `/nginx_status`, which is currently exposed without access restrictions, when defining health probes and ingress rules.
 - Review Node.js 8.17.0, `npm install` instead of `npm ci`, the unpinned NGINX image, `COPY . .` without a `.dockerignore`, and the absence of `USER` and `HEALTHCHECK` directives.
 - `.github/workflows/development.yml` pushes ACR images tagged with a release and `latest`, then directly updates and restarts an Azure Container App. Replace that path with an immutable image update committed to `microservice-app-gitops` and reconciled by ArgoCD; never apply directly to a managed cluster.
