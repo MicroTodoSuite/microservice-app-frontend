@@ -31,7 +31,7 @@ AUTH_API_ADDRESS=http://127.0.0.1:8000 TODOS_API_ADDRESS=http://127.0.0.1:8082 n
 ```
 
 ## Dependencies
-Here you can find the software required to run this microservice, as well as the version we have tested. 
+The software required to run this microservice, and the version that was tested:
 |  Dependency | Version  |
 |-------------|----------|
 | Node        | 24       |
