@@ -6,7 +6,7 @@ UI for sample distributed TODO application.
 
 - `AUTH_API_ADDRESS` - address of `auth-api` for authentication
 - `TODOS_API_ADDRESS` - address of `todos-api` for TODO CRUD
-- `ZIPKIN_URL` - address of the Zipkin UI proxied at `/zipkin`
+- `OTEL_EXPORTER_OTLP_ENDPOINT` - optional OTLP/gRPC trace collector, for example `http://jaeger-collector.observability.svc:4317`; when unset, NGINX does not trace
 - `FRONTEND_REQUEST_TIMEOUT_MS` - browser request timeout between 100 and 60000 milliseconds; defaults to `5000`
 - `FRONTEND_FEATURE_VERBOSE_ERRORS` - exposes transport error details when set to `true`; defaults to `false`
 

@@ -4,7 +4,9 @@ WORKDIR /src
 COPY package.json package-lock.json ./
 RUN npm ci --ignore-scripts
 
-COPY index.html vite.config.js vitest.config.js eslint.config.js ./
+# Dockerfile is copied into this throwaway build stage only because the
+# operational contract test asserts the runtime base image (spec 010).
+COPY index.html vite.config.js vitest.config.js eslint.config.js Dockerfile ./
 COPY nginx.conf.template entrypoint.sh ./
 COPY src ./src
 COPY test ./test
@@ -12,7 +14,8 @@ RUN npm run lint \
     && npm test \
     && npm run build
 
-FROM nginxinc/nginx-unprivileged:alpine3.23@sha256:6320020c7da8714feab524e02c08c5a1958675c4e68700e93a2fd8970b065786
+# The -otel variant is the same nginx 1.31.2 on Alpine 3.23 plus ngx_otel_module (spec 010).
+FROM nginxinc/nginx-unprivileged:alpine3.23-otel@sha256:1490cbf02ddba36ae75ef947b570166c805a178898ebfbc3bb889e7580820052
 
 USER root
 RUN apk update \
