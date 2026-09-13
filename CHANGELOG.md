@@ -1,3 +1,10 @@
+# [1.3.0](https://github.com/MicroTodoSuite/microservice-app-frontend/compare/v1.2.0...v1.3.0) (2026-09-13)
+
+
+### Features
+
+* **tracing:** trace the frontend entry point through opentelemetry ([#27](https://github.com/MicroTodoSuite/microservice-app-frontend/issues/27)) ([95818c7](https://github.com/MicroTodoSuite/microservice-app-frontend/commit/95818c7470339e7748e4c29b447bbd483b7511a3)), closes [MicroTodoSuite/microservice-app-todos-api#22](https://github.com/MicroTodoSuite/microservice-app-todos-api/issues/22) [MicroTodoSuite/microservice-app-log-message-processor#23](https://github.com/MicroTodoSuite/microservice-app-log-message-processor/issues/23) [#123](https://github.com/MicroTodoSuite/microservice-app-frontend/issues/123)
+
 # [1.2.0](https://github.com/MicroTodoSuite/microservice-app-frontend/compare/v1.1.5...v1.2.0) (2026-09-09)
 
 
