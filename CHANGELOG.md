@@ -1,3 +1,10 @@
+## [1.3.1](https://github.com/MicroTodoSuite/microservice-app-frontend/compare/v1.3.0...v1.3.1) (2026-09-14)
+
+
+### Bug Fixes
+
+* **ci:** repoint to the latest .github reusable workflow refs ([#30](https://github.com/MicroTodoSuite/microservice-app-frontend/issues/30)) ([3a9f1c2](https://github.com/MicroTodoSuite/microservice-app-frontend/commit/3a9f1c2ae2cf3506aa40bfdadbdad1009e59de04)), closes [#142](https://github.com/MicroTodoSuite/microservice-app-frontend/issues/142) [#19](https://github.com/MicroTodoSuite/microservice-app-frontend/issues/19)
+
 # [1.3.0](https://github.com/MicroTodoSuite/microservice-app-frontend/compare/v1.2.0...v1.3.0) (2026-09-13)
 
 
