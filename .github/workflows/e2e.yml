@@ -13,7 +13,7 @@ permissions:
 
 jobs:
   e2e:
-    uses: MicroTodoSuite/.github/.github/workflows/stack-tests.yml@94850da6cdcdb1ac1f9a5d65f0bd3dc8e8658eab
+    uses: MicroTodoSuite/.github/.github/workflows/stack-tests.yml@d0da1aefcc8affcd07087d6e0c2c6391b270001d
     with:
       gate-name: e2e
       compose-file: e2e/compose.yaml
