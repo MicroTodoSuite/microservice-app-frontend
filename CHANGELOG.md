@@ -1,3 +1,11 @@
+# [1.4.0](https://github.com/MicroTodoSuite/microservice-app-frontend/compare/v1.3.1...v1.4.0) (2026-09-15)
+
+
+### Features
+
+* **metrics:** count nginx responses by status code ([7e552d4](https://github.com/MicroTodoSuite/microservice-app-frontend/commit/7e552d4aa362fe18585522e6b03a0d000346f807))
+* **metrics:** count nginx responses by status code ([#33](https://github.com/MicroTodoSuite/microservice-app-frontend/issues/33)) ([48f0981](https://github.com/MicroTodoSuite/microservice-app-frontend/commit/48f0981e80d1608332861eee6d93179ab6a9add9)), closes [gitops#194](https://github.com/gitops/issues/194)
+
 ## [1.3.1](https://github.com/MicroTodoSuite/microservice-app-frontend/compare/v1.3.0...v1.3.1) (2026-09-14)
 
 
