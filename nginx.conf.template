@@ -1,5 +1,7 @@
 # ngx_otel_module ships with the nginx-unprivileged -otel image (spec 010).
 load_module modules/ngx_otel_module.so;
+# ngx_http_js_module ships with the same image; njs/metrics.js counts responses.
+load_module modules/ngx_http_js_module.so;
 
 worker_processes 1;
 
@@ -24,6 +26,20 @@ http {
     endpoint ${OTEL_EXPORTER_OTLP_ENDPOINT};
   }
   otel_service_name frontend;
+
+  # Every logged response increments its status code's counter. The
+  # response_count line goes to /dev/null: it exists so that nginx evaluates
+  # $response_counted at the log phase, once the status is final. Locations
+  # with access_log off, the health probes among them, are not counted. Any
+  # access_log directive replaces nginx's implicit default log, so the stdout
+  # access log is restated.
+  js_path /etc/nginx/njs/;
+  js_import metrics from metrics.js;
+  js_shared_dict_zone zone=responses:1m type=number;
+  js_set $response_counted metrics.count;
+  log_format response_count '$response_counted';
+  access_log /var/log/nginx/access.log combined;
+  access_log /dev/null response_count;
 
   map $http_x_request_id $correlation_id {
     default $http_x_request_id;
@@ -95,6 +111,21 @@ http {
       access_log off;
       allow 127.0.0.1;
       deny all;
+    }
+  }
+
+  # Prometheus reads the response counters here. The load balancer forwards
+  # only 8080, so this port is reachable inside the cluster alone.
+  server {
+    listen 9114;
+    access_log off;
+
+    location = /metrics {
+      js_content metrics.render;
+    }
+
+    location / {
+      return 404;
     }
   }
 }

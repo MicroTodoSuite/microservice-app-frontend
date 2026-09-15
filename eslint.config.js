@@ -21,5 +21,16 @@ export default [
     rules: {
       'vue/multi-word-component-names': 'off'
     }
+  },
+  {
+    // nginx runs these modules; ngx is the global njs provides.
+    files: ['njs/**/*.js'],
+    languageOptions: {
+      ecmaVersion: 'latest',
+      sourceType: 'module',
+      globals: {
+        ngx: 'readonly'
+      }
+    }
   }
 ]
