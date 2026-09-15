@@ -9,6 +9,7 @@ RUN npm ci --ignore-scripts
 COPY index.html vite.config.js vitest.config.js eslint.config.js Dockerfile ./
 COPY nginx.conf.template entrypoint.sh ./
 COPY src ./src
+COPY njs ./njs
 COPY test ./test
 RUN npm run lint \
     && npm test \
@@ -29,6 +30,7 @@ RUN apk update \
 
 COPY --from=build --chown=101:101 /src/dist /usr/share/nginx/html
 COPY --chown=101:101 nginx.conf.template /etc/nginx/nginx.conf.template
+COPY --chown=101:101 njs/metrics.js /etc/nginx/njs/metrics.js
 COPY --chown=101:101 --chmod=0755 entrypoint.sh /entrypoint.sh
 
 # nginx-unprivileged maps its nginx account to UID/GID 101. A numeric image

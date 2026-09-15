@@ -9,7 +9,7 @@
     "dev": "vite",
     "start": "vite",
     "build": "vite build",
-    "lint": "eslint src test vite.config.js vitest.config.js",
+    "lint": "eslint src test njs vite.config.js vitest.config.js",
     "test": "vitest run",
     "audit:production": "npm audit --omit=dev --audit-level=high"
   },
