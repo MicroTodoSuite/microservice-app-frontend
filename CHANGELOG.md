@@ -1,3 +1,10 @@
+## [1.4.1](https://github.com/MicroTodoSuite/microservice-app-frontend/compare/v1.4.0...v1.4.1) (2026-09-21)
+
+
+### Bug Fixes
+
+* **ci:** pin the promotion workflow past the conventions repair ([#34](https://github.com/MicroTodoSuite/microservice-app-frontend/issues/34)) ([8e1c174](https://github.com/MicroTodoSuite/microservice-app-frontend/commit/8e1c17459a525a23730432998b18c08d6693054f)), closes [#191](https://github.com/MicroTodoSuite/microservice-app-frontend/issues/191) [#192](https://github.com/MicroTodoSuite/microservice-app-frontend/issues/192) [#193](https://github.com/MicroTodoSuite/microservice-app-frontend/issues/193) [#195](https://github.com/MicroTodoSuite/microservice-app-frontend/issues/195) [#196](https://github.com/MicroTodoSuite/microservice-app-frontend/issues/196) [#198](https://github.com/MicroTodoSuite/microservice-app-frontend/issues/198) [MicroTodoSuite/microservice-app-gitops#205](https://github.com/MicroTodoSuite/microservice-app-gitops/issues/205)
+
 # [1.4.0](https://github.com/MicroTodoSuite/microservice-app-frontend/compare/v1.3.1...v1.4.0) (2026-09-15)
 
 
