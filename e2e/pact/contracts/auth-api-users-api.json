@@ -1,0 +1,24 @@
+{
+  "consumer": { "name": "auth-api" },
+  "provider": { "name": "users-api" },
+  "interactions": [
+    {
+      "description": "get admin user with a valid service-issued bearer token",
+      "request": {
+        "method": "GET",
+        "path": "/users/admin"
+      },
+      "response": {
+        "status": 200,
+        "headers": { "Content-Type": "application/json" },
+        "body": {
+          "username": "admin",
+          "firstname": "Foo",
+          "lastname": "Bar",
+          "role": "ADMIN"
+        }
+      }
+    }
+  ],
+  "metadata": { "pactSpecification": { "version": "3.0.0" } }
+}
