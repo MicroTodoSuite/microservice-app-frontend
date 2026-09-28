@@ -1,3 +1,11 @@
+## [1.4.2](https://github.com/MicroTodoSuite/microservice-app-frontend/compare/v1.4.1...v1.4.2) (2026-09-28)
+
+
+### Bug Fixes
+
+* **docker:** pin the libexpat build alpine 3.23 still serves ([704698f](https://github.com/MicroTodoSuite/microservice-app-frontend/commit/704698ff1dc5db3518fd7f3b98d963aded487d11))
+* **docker:** pin the libexpat build alpine 3.23 still serves ([#38](https://github.com/MicroTodoSuite/microservice-app-frontend/issues/38)) ([77cb6d8](https://github.com/MicroTodoSuite/microservice-app-frontend/commit/77cb6d8f7c8cb9e1b5768ca86ab00964402d7731))
+
 ## [1.4.1](https://github.com/MicroTodoSuite/microservice-app-frontend/compare/v1.4.0...v1.4.1) (2026-09-21)
 
 
