@@ -22,7 +22,7 @@ USER root
 RUN apk update \
     && apk add --upgrade --no-cache \
         libcrypto3=3.5.8-r0 \
-        libexpat=2.8.4-r0 \
+        libexpat=2.8.5-r0 \
         libssl3=3.5.8-r0 \
         libuuid=2.41.6-r1 \
     && apk del --no-cache curl libcurl \
