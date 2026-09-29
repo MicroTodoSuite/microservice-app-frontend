@@ -122,6 +122,16 @@ describe('frontend operational contract', () => {
     expect(nginx).not.toMatch(/zipkin/i)
   })
 
+  // With a variable in proxy_pass, nginx sends exactly the URI written there,
+  // so "proxy_pass $todos_api_address/todos" turned DELETE /todos/7 into
+  // DELETE /todos, which todos-api answers "Cannot DELETE /todos" (404).
+  it('forwards the full request path to each proxied API', () => {
+    const nginx = readFileSync(resolve('nginx.conf.template'), 'utf8')
+    expect(nginx).toContain('proxy_pass $todos_api_address$request_uri;')
+    expect(nginx).toContain('proxy_pass $auth_api_address$request_uri;')
+    expect(nginx).not.toMatch(/proxy_pass \$[a-z_]+\/(todos|login);/)
+  })
+
   it('starts nginx with tracing switched by the OTLP endpoint on the OpenTelemetry image', () => {
     const entrypoint = readFileSync(resolve('entrypoint.sh'), 'utf8')
     const dockerfile = readFileSync(resolve('Dockerfile'), 'utf8')
