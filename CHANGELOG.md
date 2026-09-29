@@ -1,3 +1,11 @@
+## [1.4.3](https://github.com/MicroTodoSuite/microservice-app-frontend/compare/v1.4.2...v1.4.3) (2026-09-29)
+
+
+### Bug Fixes
+
+* **proxy:** forward the full request path to the apis ([681f90a](https://github.com/MicroTodoSuite/microservice-app-frontend/commit/681f90a7cb23ef1767c328efd98e9cbec06ad68f))
+* **proxy:** forward the full request path to the apis ([#39](https://github.com/MicroTodoSuite/microservice-app-frontend/issues/39)) ([4896658](https://github.com/MicroTodoSuite/microservice-app-frontend/commit/489665820a46b0d0ed2142e3bb63f3c44f3d3493)), closes [#40](https://github.com/MicroTodoSuite/microservice-app-frontend/issues/40)
+
 ## [1.4.2](https://github.com/MicroTodoSuite/microservice-app-frontend/compare/v1.4.1...v1.4.2) (2026-09-28)
 
 
