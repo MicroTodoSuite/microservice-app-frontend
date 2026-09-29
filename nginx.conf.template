@@ -68,7 +68,7 @@ http {
     location /login {
       otel_trace ${FRONTEND_OTEL_TRACE};
       otel_trace_context propagate;
-      proxy_pass $auth_api_address/login;
+      proxy_pass $auth_api_address$request_uri;
       proxy_http_version 1.1;
       proxy_set_header X-Request-Id $correlation_id;
     }
@@ -76,7 +76,7 @@ http {
     location /todos {
       otel_trace ${FRONTEND_OTEL_TRACE};
       otel_trace_context propagate;
-      proxy_pass $todos_api_address/todos;
+      proxy_pass $todos_api_address$request_uri;
       proxy_http_version 1.1;
       proxy_set_header X-Request-Id $correlation_id;
     }
